@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#76c9f4">
+<title>SAFE Racing Challenge 3D V10 • Semua Gajet + Ranking Online</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:none;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#96d8ff;color:white}canvas{display:block;width:100%;height:100%;touch-action:none}
+.hud{position:fixed;z-index:5;top:max(12px,env(safe-area-inset-top));left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none}.stat{background:#123357c7;border:1.5px solid #ffffff65;border-radius:19px;padding:10px 17px;min-width:109px;box-shadow:0 9px 22px #14314742;backdrop-filter:blur(8px)}.stat small{display:block;letter-spacing:1.1px;font-size:11px;font-weight:900}.stat strong{display:block;font-size:24px;line-height:1.2;text-shadow:0 2px 2px #0003}.brand{position:fixed;z-index:5;top:max(85px,calc(env(safe-area-inset-top) + 76px));left:50%;transform:translateX(-50%);border-radius:100px;background:linear-gradient(#ffe67d,#ffab29);color:#56310a;font-weight:1000;font-size:clamp(11px,1.8vw,14px);letter-spacing:.2px;white-space:nowrap;padding:9px 16px;box-shadow:0 5px 0 #ba6b19,0 9px 18px #1849773d;border:2px solid #fff0bb;pointer-events:none}.pause{position:fixed;z-index:6;top:max(17px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:#163d62b8;border:1px solid #ffffff79;color:white;border-radius:16px;width:48px;height:48px;font-size:23px;cursor:pointer;backdrop-filter:blur(7px)}.controls{position:fixed;bottom:max(22px,env(safe-area-inset-bottom));left:0;right:0;z-index:7;display:flex;justify-content:space-between;padding:0 clamp(20px,7vw,100px);pointer-events:none}.ctl{width:clamp(72px,10vw,90px);height:clamp(70px,10vw,86px);border-radius:24px;font-size:35px;font-weight:900;color:white;border:2px solid #ffffff99;background:#164869b5;box-shadow:0 9px 19px #09273e4d;backdrop-filter:blur(7px);pointer-events:auto;touch-action:none;user-select:none;cursor:pointer}.ctl:active{background:#ffb737;color:#3b2818;transform:scale(.94)}.overlay{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:17px;background:linear-gradient(145deg,#194575ae,#132c50d1);backdrop-filter:blur(7px)}.overlay[hidden]{display:none}.panel{position:relative;overflow:hidden;background:linear-gradient(165deg,#fffefd,#e3f6ff);width:min(440px,95vw);padding:28px 23px 24px;border-radius:30px;border:4px solid white;text-align:center;color:#21405c;box-shadow:0 30px 90px #081c4277}.panel:before{content:"";position:absolute;width:240px;height:240px;border-radius:100%;background:#ffdc7270;left:-115px;top:-130px}.badge{position:relative;display:inline-block;border-radius:100px;padding:6px 14px;font-size:11px;font-weight:1000;letter-spacing:1px;background:#d8f7ff;color:#17739c}.bigemoji{font-size:59px;margin:10px 0 1px;filter:drop-shadow(0 4px 3px #0002)}h1{position:relative;font-size:clamp(26px,5.4vw,36px);line-height:1.08;margin:9px 0 14px;color:#153c65;letter-spacing:-1px}p{font-size:14px;line-height:1.58;margin:10px 0}.button{margin-top:14px;font-weight:1000;font-size:18px;border:none;border-radius:17px;background:linear-gradient(180deg,#ffd45c,#ff8e2b);color:#533003;padding:15px 30px;box-shadow:0 5px 0 #b96822;cursor:pointer}.button:active{transform:translateY(3px);box-shadow:0 2px 0 #b96822}.small{font-size:12px;color:#58718a}.total{font-weight:1000;font-size:52px;color:#f98c25;margin:0}.error{display:none;background:#ffe8db;color:#9b391f;padding:10px;border-radius:12px;margin-top:12px;font-size:12px}.error.show{display:block}@media(max-width:600px){.stat{padding:8px 11px;min-width:93px}.stat strong{font-size:20px}.brand{top:max(78px,calc(env(safe-area-inset-top) + 71px))}.pause{width:43px;height:43px}.panel{padding:23px 18px}}
+
+.lives{position:fixed;z-index:6;left:50%;transform:translateX(-50%);top:max(12px,env(safe-area-inset-top));font-size:21px;text-shadow:0 2px 5px #17345c;white-space:nowrap;background:#173d629c;border-radius:20px;padding:8px 12px;pointer-events:none}
+.music{position:fixed;right:12px;top:max(98px,calc(env(safe-area-inset-top) + 88px));z-index:8;border:1px solid #fff9;border-radius:14px;background:#245276e0;color:white;font-weight:800;padding:9px 13px;cursor:pointer}
+.overlay .panel{max-height:95dvh;overflow:auto}.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:17px 0 4px}.pick{border:2px solid #bedbea;border-radius:16px;background:#f3fbff;padding:12px 5px;color:#254362;font-weight:900;cursor:pointer;min-height:91px}.pick span{font-size:32px;display:block}.pick.selected{border-color:#ff9730;box-shadow:inset 0 0 0 2px #ffc96e;background:#fff0cb}.quizAnswers{display:grid;gap:9px;margin:15px 0}.answer{border:2px solid #c3dfef;background:#f4fbff;border-radius:14px;padding:13px 12px;font-size:15px;font-weight:750;color:#254362;text-align:left;cursor:pointer}.answer:disabled{opacity:.7;cursor:default}.answer.correct{border-color:#32ae68;background:#d9ffe5}.answer.wrong{border-color:#f26f5c;background:#ffe2dd}.quizFeedback{font-weight:800;min-height:25px;color:#245578}.notice{position:fixed;z-index:8;left:50%;bottom:115px;transform:translateX(-50%);padding:10px 18px;background:#1c496bd9;color:white;border-radius:100px;font-weight:900;pointer-events:none;white-space:nowrap}.notice[hidden]{display:none}
+@media(max-width:600px){.lives{top:60px;font-size:16px}.brand{top:110px}.music{top:67px;padding:8px 9px;font-size:12px}.choices{gap:5px}.pick{font-size:12px;min-height:76px}.pick span{font-size:25px}.notice{bottom:115px;font-size:12px}}
+.homeTop{position:fixed;z-index:8;left:12px;top:max(98px,calc(env(safe-area-inset-top) + 88px));border:1px solid #fff9;border-radius:14px;background:#245276e0;color:white;font-weight:900;padding:9px 13px;cursor:pointer}.homeBtn{background:linear-gradient(180deg,#dceaf6,#b8d2e7);box-shadow:0 5px 0 #83a6be;color:#20445d;font-size:14px;padding:12px 20px;display:block;margin:14px auto 0}.homeBtn:active{box-shadow:0 2px 0 #83a6be}@media(max-width:600px){.homeTop{top:67px;padding:8px 9px;font-size:12px}}
+
+.rankName{display:block;margin:15px auto 4px;width:100%;max-width:310px;padding:13px 15px;border:2px solid #a6cde4;border-radius:13px;font-size:16px;color:#173c5b;background:#fff;outline:none;text-align:center;touch-action:auto}
+.rankName:focus{border-color:#ef9b35;box-shadow:0 0 0 3px #ffcf8055}
+.rankStatus{font-size:12px;color:#476c84;min-height:18px;margin-top:8px}
+.rankList{margin:13px 0 0;text-align:left;max-height:min(51vh,440px);overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;border-radius:15px;border:1px solid #bed6e4;background:#f7fcff}
+.rankRow{display:grid;grid-template-columns:42px minmax(0,1fr) 75px;gap:5px;align-items:center;padding:11px 12px;border-bottom:1px solid #dce9f0;color:#24445c;font-size:13px}
+.rankRow:last-child{border-bottom:0}.rankRow:nth-child(even){background:#e8f6fc}.rankRow strong{text-align:right;color:#d16b12}.rankRow em{font-style:normal;font-weight:900;color:#a36920}.rankRow .player{overflow-wrap:anywhere;font-weight:750}
+.rankRow.myRun{background:#fff1c5;border:1px solid #f0ba51}
+.rankActions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}.rankActions .button{font-size:14px;padding:12px 16px}
+@media(max-width:520px){.rankRow{padding:9px 8px;grid-template-columns:35px minmax(0,1fr) 65px}}
+
+
+/* V10: responsive orientation and safe-area layout across phone, tablet and laptop */
+html,body{width:100%;height:100%;height:100dvh;min-height:0;-webkit-text-size-adjust:100%;}
+body{position:fixed;inset:0;overflow:hidden}button,input{font-family:inherit}button{ -webkit-tap-highlight-color:transparent;touch-action:manipulation}button:focus-visible,input:focus-visible{outline:3px solid #ffbf51;outline-offset:2px}
+.overlay{inset:0;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));overflow:hidden;overscroll-behavior:contain;}
+.overlay .panel{width:min(460px,100%);max-height:calc(100dvh - max(20px,env(safe-area-inset-top)) - max(20px,env(safe-area-inset-bottom)));overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.rankList{height:auto;max-height:min(43dvh,420px);min-height:80px;overflow-y:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.hud{top:max(8px,env(safe-area-inset-top));left:max(9px,env(safe-area-inset-left));right:max(9px,env(safe-area-inset-right))}
+.controls{bottom:max(12px,env(safe-area-inset-bottom));padding-left:max(15px,env(safe-area-inset-left));padding-right:max(15px,env(safe-area-inset-right))}
+.homeTop{left:max(9px,env(safe-area-inset-left))}.music{right:max(9px,env(safe-area-inset-right))}
+.notice{max-width:calc(100vw - 20px);white-space:normal;text-align:center;font-size:clamp(11px,2.7vw,14px);bottom:calc(max(12px,env(safe-area-inset-bottom)) + 89px)}
+@media(orientation:portrait){
+ .brand{top:calc(max(8px,env(safe-area-inset-top)) + 118px);font-size:11px;padding:8px 10px;max-width:94vw;overflow:hidden;text-overflow:ellipsis}
+ .lives{top:calc(max(8px,env(safe-area-inset-top)) + 58px);padding:5px 9px;font-size:16px}
+ .homeTop,.music{top:calc(max(8px,env(safe-area-inset-top)) + 91px);font-size:11px;padding:8px 9px}
+ .controls{padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right))}
+ .ctl{width:clamp(68px,22vw,92px);height:clamp(68px,22vw,92px)}
+}
+@media(max-width:420px){.stat{padding:7px 9px;min-width:77px;border-radius:13px}.stat strong{font-size:18px}.stat small{font-size:10px}.pause{width:38px;height:38px;top:max(9px,env(safe-area-inset-top));font-size:19px}.panel{border-width:2px;border-radius:21px;padding:17px 14px}.panel h1{font-size:clamp(22px,7vw,30px);margin:6px 0 9px}.panel p{font-size:13px;line-height:1.4}.bigemoji{font-size:38px;margin:4px}.choices{margin:9px 0 2px}.pick{padding:7px 3px;min-height:67px;font-size:11px}.pick span{font-size:23px}.rankName{margin:8px auto 4px;padding:10px}.button{margin-top:9px;padding:11px 18px;font-size:15px}.answer{font-size:14px;padding:10px}.quizAnswers{gap:6px;margin:9px 0}.rankActions .button{padding:10px 12px}}
+@media(orientation:landscape) and (max-height:540px){
+ .stat{padding:5px 10px;border-radius:12px;min-width:85px}.stat strong{font-size:18px}.stat small{font-size:9px}
+ .pause{width:37px;height:37px;top:max(5px,env(safe-area-inset-top));border-radius:11px;font-size:18px}
+ .lives{top:max(6px,env(safe-area-inset-top));font-size:17px;padding:5px 7px}
+ .brand{top:calc(max(6px,env(safe-area-inset-top)) + 39px);font-size:10px;padding:5px 10px}
+ .homeTop,.music{top:calc(max(5px,env(safe-area-inset-top)) + 43px);font-size:11px;padding:6px 9px;border-radius:10px}
+ .ctl{width:65px;height:62px;border-radius:17px;font-size:27px}.controls{bottom:max(8px,env(safe-area-inset-bottom))}
+ .overlay .panel{width:min(630px,96%);max-height:calc(100dvh - 14px);padding:10px 18px;border-radius:16px;border-width:2px}
+ .panel h1{font-size:23px;margin:4px 0 8px}.panel p{font-size:12px;margin:5px 0;line-height:1.3}.bigemoji{font-size:25px;margin:2px}
+ .choices{margin:6px auto 2px;max-width:400px}.pick{min-height:52px;padding:4px;font-size:11px}.pick span{font-size:18px}
+ .rankName{padding:8px;margin:5px auto}.button{margin-top:6px;padding:8px 14px;font-size:13px}.homeBtn{margin-top:7px}.quizAnswers{gap:5px;margin:6px 0}.answer{padding:8px 10px;font-size:12px}.rankList{max-height:38dvh}
+ .notice{bottom:calc(max(8px,env(safe-area-inset-bottom)) + 67px)}
+}
+@media(min-width:700px) and (orientation:portrait){.lives{top:max(12px,env(safe-area-inset-top));font-size:20px}.brand{top:calc(max(12px,env(safe-area-inset-top)) + 82px)}.homeTop,.music{top:calc(max(12px,env(safe-area-inset-top)) + 50px)}.panel{width:min(500px,90vw)}}
+@media(prefers-reduced-motion:reduce){.button,.ctl{transition:none}}
+</style>
+</head>
+<body>
+<div class="hud"><div class="stat"><small>SKOR</small><strong id="score">0</strong></div><div class="stat" style="text-align:right"><small>KELAJUAN</small><strong id="speed">1.0×</strong></div></div>
+<button class="pause" id="pause" aria-label="Jeda permainan">Ⅱ</button><div class="lives" id="lives">❤️❤️❤️</div><button class="music" id="music" aria-label="Hidup atau matikan muzik">♫ MUZIK ON</button>
+<button class="homeTop" id="homeTop" aria-label="Kembali ke halaman utama">⌂ HOME</button><div class="brand">🏎️ SAFE RACING CHALLENGE 3D</div>
+<div class="controls"><button class="ctl" id="left" aria-label="Gerak kiri">◀</button><button class="ctl" id="right" aria-label="Gerak kanan">▶</button></div>
+<div class="overlay" id="intro"><div class="panel"><span class="badge">V10 • SEMUA GAJET + RANKING ONLINE</span><div class="bigemoji">🏎️🌈</div><h1>SAFE RACING<br>CHALLENGE 3D</h1><p>Pilih kereta kegemaran! Elak kenderaan, kon dan lubang. Ada <b>3 nyawa</b> serta soalan SAFE untuk markah bonus.</p><div class="choices" id="choices"><button class="pick selected" data-car="cute"><span>🚗</span>Comel</button><button class="pick" data-car="sport"><span>🏎️</span>Sport</button><button class="pick" data-car="f1"><span>🏁</span>Formula</button></div><label for="playerName" class="small" style="display:block;margin-top:12px;font-weight:900">NAMA PEMAIN (UNTUK RANKING)</label><input id="playerName" class="rankName" placeholder="Contoh: Ali" maxlength="24" autocomplete="nickname"><button class="button" id="startBtn">MULA MAIN 🚦</button><p class="rankStatus" id="nameStatus"></p><button class="button homeBtn" id="introRanking">🏆 SEMAK RANKING ONLINE</button><p class="small">Komputer: ← → / A D • Telefon: ◀ ▶ atau leret<br>Telefon &amp; iPad: boleh menegak atau melintang (melintang lebih luas).<br>Ambil kotak ? untuk soalan SAFE. Ada sela masa antara soalan.</p><div class="error" id="error">Enjin 3D gagal dimuatkan. Pastikan internet aktif dan buka fail melalui Chrome, Edge atau Safari.</div></div></div>
+<div class="overlay" id="end" hidden><div class="panel"><span class="badge">TAMAT PERMAINAN</span><div class="bigemoji">🏁💥</div><h1>CUBA LAGI!</h1><p>Skor anda</p><div class="total" id="final">0</div><div class="rankStatus" id="saveStatus">Markah sedang diproses...</div><button class="button" id="endRanking">🏆 SEMAK KEDUDUKAN</button><button class="button" id="again">MAIN SEMULA</button><button class="button homeBtn" id="endHome">⌂ KEMBALI KE HOME</button></div></div>
+<div class="overlay" id="quiz" hidden><div class="panel"><span class="badge">📚 SOALAN SAFE</span><h1 id="qHeading">JOM JAWAB!</h1><p id="qText"></p><div class="quizAnswers" id="answers"></div><div class="quizFeedback" id="feedback" aria-live="polite"></div><button class="button" id="qContinue" hidden>SAMBUNG PERMAINAN ➜</button><button class="button homeBtn" id="quizHome">⌂ KEMBALI KE HOME</button></div></div><div id="notice" class="notice" hidden></div><div class="overlay" id="paused" hidden><div class="panel"><div class="bigemoji">⏸️</div><h1>PERMAINAN DIJEDA</h1><button class="button" id="resume">SAMBUNG MAIN</button><button class="button homeBtn" id="pauseHome">⌂ KEMBALI KE HOME</button></div></div>
+<div class="overlay" id="rankOverlay" hidden><div class="panel"><span class="badge">🏆 SAFE RACING CHALLENGE 3D</span><h1>RANKING ONLINE</h1><p class="small">20 markah tertinggi • Ranking ini berasingan daripada SAFE Flappy Challenge.</p><div id="rankStatus" class="rankStatus" role="status">Memuatkan ranking...</div><div id="rankList" class="rankList" aria-live="polite"></div><div class="rankActions"><button class="button" id="rankRefresh">↻ MUAT SEMULA</button><button class="button homeBtn" id="rankClose">TUTUP</button></div></div></div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script>
+<script type="module">
+try {
+const THREE=await import('https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js');
+const {RoundedBoxGeometry}=await import('https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/geometries/RoundedBoxGeometry.js');
+const $=id=>document.getElementById(id);
+// Supabase publishable/anon key (public by design). Do not use service_role in browser.
+const RACING_URL='https://aielpolhlijrysbyasvc.supabase.co';
+const RACING_KEY='sb_publishable_sPoP1H-Z8MXuY-nr1LE8Jg_oC88dFxQ';
+const SCORES_API=RACING_URL+'/rest/v1/safe_racing_scores';
+let playerName='',finalRunId=null,submitPromise=null,gameSerial=0;
+function sbHeaders(json=false){return {'apikey':RACING_KEY,...(json?{'Content-Type':'application/json'}:{})}}
+function cleanName(value){return (value||'').replace(/[<>\x00-\x1f\x7f]/g,'').replace(/\s+/g,' ').trim().slice(0,24)}
+async function scoreRequest(url,options={}){
+ const ctl=new AbortController();const timeout=setTimeout(()=>ctl.abort(),9000);
+ try{const response=await fetch(url,{...options,signal:ctl.signal});if(!response.ok){const message=await response.text().catch(()=>"");throw Error('HTTP '+response.status+(message?' '+message.slice(0,180):''))}return response.status===204?null:await response.json()}
+ finally{clearTimeout(timeout)}
+}
+async function submitScore(points,serial){
+ const status=$('saveStatus');status.textContent='⏳ Menyimpan markah online...';
+ const entry={player_name:playerName,score:Math.max(0,Math.floor(points)),car_type:chosen,questions_answered:questionsAsked};
+ try{const rows=await scoreRequest(SCORES_API,{method:'POST',headers:{...sbHeaders(true),Prefer:'return=representation'},body:JSON.stringify(entry)});
+  if(serial!==gameSerial)return;
+  finalRunId=rows?.[0]?.id||null;status.textContent='✅ Markah berjaya disimpan ke ranking online.';
+ }catch(e){if(serial!==gameSerial)return;console.warn('Ranking save failed',e);status.textContent='⚠️ Markah belum dapat disimpan. Semak sambungan atau jadual Supabase.';}
+}
+function renderRankings(rows){const host=$('rankList');host.replaceChildren();if(!rows.length){host.textContent='Belum ada rekod. Jadilah pemain pertama!';return}
+ rows.forEach((row,i)=>{const item=document.createElement('div');item.className='rankRow'+(finalRunId&&row.id===finalRunId?' myRun':'');
+ const medal=document.createElement('em');medal.textContent=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1)+'.';
+ const name=document.createElement('span');name.className='player';name.textContent=row.player_name||'Pemain';
+ const val=document.createElement('strong');val.textContent=Number(row.score||0).toLocaleString('ms-MY');item.append(medal,name,val);host.append(item)})
+}
+async function showRankings(){const overlay=$('rankOverlay');overlay.hidden=false;$('rankStatus').textContent='⏳ Memuatkan ranking online...';$('rankList').replaceChildren();
+ try{const rows=await scoreRequest(SCORES_API+'?select=id,player_name,score,created_at&order=score.desc,created_at.asc&limit=20',{headers:sbHeaders()});
+ if(overlay.hidden)return;renderRankings(Array.isArray(rows)?rows:[]);$('rankStatus').textContent='🏁 Top 20 skor tertinggi';
+ }catch(e){console.warn('Ranking unavailable',e);$('rankStatus').textContent='⚠️ Ranking belum dapat dibuka. Pastikan jadual SQL telah disediakan di Supabase dan internet aktif.';}
+}
+function closeRankings(){$('rankOverlay').hidden=true}
+$('introRanking').onclick=showRankings;$('endRanking').onclick=showRankings;$('rankRefresh').onclick=showRankings;$('rankClose').onclick=closeRankings;
+
+const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||('ontouchstart' in window&&Math.min(innerWidth,innerHeight)<1024)||window.innerWidth<700;
+const scene=new THREE.Scene();scene.background=new THREE.Color('#93d4ff');scene.fog=new THREE.FogExp2('#b9e4f5',.0115);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,250);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio||1,isMobile?1.35:1.85));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.55;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.prepend(renderer.domElement);
+const hemi=new THREE.HemisphereLight('#fffdf2','#73a85c',2.3);scene.add(hemi);const sun=new THREE.DirectionalLight('#ffdfaa',3.3);sun.position.set(-20,32,15);sun.castShadow=true;sun.shadow.mapSize.set(isMobile?1024:2048,isMobile?1024:2048);sun.shadow.camera.left=-27;sun.shadow.camera.right=27;sun.shadow.camera.top=33;sun.shadow.camera.bottom=-33;sun.shadow.normalBias=.04;scene.add(sun);const fill=new THREE.DirectionalLight('#a1ccff',1.2);fill.position.set(16,10,-22);scene.add(fill);
+const paint=c=>new THREE.MeshPhysicalMaterial({color:c,metalness:.16,roughness:.22,clearcoat:1,clearcoatRoughness:.12});const matte=c=>new THREE.MeshStandardMaterial({color:c,roughness:.86});const cream=matte('#fff9df'),dark=matte('#293044');const black=matte('#192330');const roadMat=matte('#57677a');
+function addMesh(parent,geo,material,x=0,y=0,z=0,shadow=true){const m=new THREE.Mesh(geo,material);m.position.set(x,y,z);m.castShadow=shadow;m.receiveShadow=true;parent.add(m);return m}
+function box(parent,w,h,d,material,x=0,y=0,z=0,bevel=0){const geo=bevel?new RoundedBoxGeometry(w,h,d,4,bevel):new THREE.BoxGeometry(w,h,d);return addMesh(parent,geo,material,x,y,z)}
+function sphere(parent,sx,sy,sz,material,x=0,y=0,z=0,segments=20){const m=addMesh(parent,new THREE.SphereGeometry(1,segments,Math.max(12,segments>>1)),material,x,y,z);m.scale.set(sx,sy,sz);return m}
+function cyl(parent,rt,rb,h,material,x,y,z,segments=12){return addMesh(parent,new THREE.CylinderGeometry(rt,rb,h,segments),material,x,y,z)}
+// Ground, pavement and three-lane highway.
+box(scene,280,.12,280,matte('#80c66c'),0,-.18,-91);box(scene,15.9,.11,260,roadMat,0,0,-94);for(const x of [-7.86,7.86])box(scene,.26,.045,260,cream,x,.075,-94);for(const x of [-8.25,8.25])box(scene,.38,.13,260,matte('#debda0'),x,.045,-94);
+const moving=[];function scroll(obj,loop,speed=1){moving.push({obj,loop,speed})}for(const x of [-2.65,2.65])for(let i=0;i<32;i++){scroll(box(scene,.23,.037,2.7,cream,x,.081,13-i*6.75),216)}
+// Mountains at horizon to build depth.
+const mountainMats=[matte('#a2c8bd'),matte('#86b5aa'),matte('#b4c7ae')];for(let i=0;i<15;i++){const x=(i-7)*18;const h=12+(i%4)*5;const m=addMesh(scene,new THREE.ConeGeometry(9,h,5),mountainMats[i%3],x,h/2-1,-143,false);m.rotation.y=i*.5}
+// Puffy clouds, stylized canopies, flowers and signs.
+const foliage=['#3fae67','#5ecb72','#2fa65c','#8dda71','#57b85a'].map(matte),bark=matte('#9c603e');
+function tree(x,z,variation){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);const s=.86+(variation%5)*.11;g.scale.setScalar(s);cyl(g,.23,.34,2.3,bark,0,1.16,0);for(const [a,b,c,d] of [[0,2.8,0,1.28],[-.78,2.45,.04,1],[.74,2.53,-.04,.99],[0,3.48,.08,.85]])sphere(g,d,d*.82,d,foliage[variation%foliage.length],a,b,c);scroll(g,208,.78)}
+function flower(x,z,i){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);cyl(g,.035,.045,.4,matte('#4a9850'),0,.2,0,6);const petals=[matte('#ffdb54'),matte('#ffc3d3'),matte('#fff6e0')];sphere(g,.2,.1,.2,petals[i%3],0,.45,0,10);scroll(g,190,.8)}
+const greenSign=matte('#2f9a7d'),wood=matte('#e1bf84');function sign(x,z,i){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);cyl(g,.07,.1,2.5,wood,0,1.25,0);box(g,2.8,1.15,.14,greenSign,0,2.55,0,.18);box(g,1.45,.12,.05,cream,0,2.65,.09,.04);box(g,.9,.11,.05,cream,0,2.38,.09,.04);scroll(g,205,.85)}
+for(let i=0;i<24;i++){const z=12-i*8.7;tree(-12-(i%4)*1.4,z,i);tree(12+(i%3)*1.7,z-3,i+3);if(i%2===0){flower(-9.5,z+2,i);flower(9.6,z-2,i+1)}if(i%7===0){sign(-9.7,z-7,i);sign(9.7,z-11,i)}}
+function cloud(x,y,z,s){const g=new THREE.Group();g.position.set(x,y,z);g.scale.setScalar(s);scene.add(g);const wm=new THREE.MeshBasicMaterial({color:'#fffef5',transparent:true,opacity:.9,depthWrite:false});for(const [xx,yy,ss] of [[-1.4,0,1.05],[-.45,.6,1.35],[.7,.36,1.13],[1.65,-.05,.82]])sphere(g,ss,ss*.62,ss*.8,wm,xx,yy,0,16);return g}
+for(let i=0;i<10;i++)cloud(-32+i*9,12+(i%3)*2.1,-35-i*9,.9+(i%3)*.23);
+// Soft sunset glow and playful hot air balloons, away from the collision path.
+sphere(scene,8,8,1,new THREE.MeshBasicMaterial({color:'#fff0ad'}),-45,19,-132,28);
+function balloon(x,y,z,clr){const g=new THREE.Group();g.position.set(x,y,z);scene.add(g);sphere(g,2.1,2.8,2.1,paint(clr),0,1,0);for(const s of [-.65,.65]){const rope=box(g,.045,2,.045,matte('#936b4a'),s,-1.5,0);rope.rotation.z=s*.08}box(g,1.25,.75,1.12,wood,0,-2.65,0,.15)}balloon(28,17,-82,'#f8a1bc');balloon(-27,21,-124,'#ffcf57');
+// Detailed rounded car. Vehicle faces -Z; players see its rear (+Z).
+const glass=paint('#8bcee8'),glassDark=paint('#4e98bc'),tire=matte('#222630'),rim=paint('#e1eef9'),redLamp=new THREE.MeshStandardMaterial({color:'#ff3b3b',emissive:'#ed343a',emissiveIntensity:.9,roughness:.25}),lamp=new THREE.MeshStandardMaterial({color:'#fff9c9',emissive:'#ffda83',emissiveIntensity:.7});
+function makeCar(color,face=true){const g=new THREE.Group(),p=paint(color),details=matte('#fff5db');
+// Body made of overlapping sculpted ellipsoids and rounded blocks, avoiding the boxy V1 silhouette.
+box(g,2.46,.75,3.88,p,0,.79,0,.35);sphere(g,1.24,.43,1.88,p,0,.91,-.03,32);box(g,2.08,.78,1.95,p,0,1.39,-.24,.38);
+sphere(g,1.04,.27,.78,p,0,1.68,-.27,28);sphere(g,1.09,.28,.74,p,0,.95,-1.38,28);sphere(g,1.12,.25,.53,p,0,.98,1.46,28);
+// Windows formed by rounded panels, with large friendly rear eyes for main car.
+box(g,1.75,.46,.085,glass,0,1.45,.76,.15);box(g,1.74,.49,.09,glassDark,0,1.45,-1.16,.15);
+for(const x of [-1.04,1.04]){const side=box(g,.072,.46,1.14,glass, x,1.42,-.27,.06);side.rotation.z=x>0?-.10:.10}
+// Trim and door details.
+for(const x of [-1.15,1.15])box(g,.11,.075,1.17,details,x,1.13,-.14,.04);
+for(const x of [-1.12,1.12])for(const z of [-1.19,1.23]){const wh=addMesh(g,new THREE.CylinderGeometry(.48,.48,.36,24),tire,x,.5,z);wh.rotation.z=Math.PI/2;const rr=addMesh(g,new THREE.CylinderGeometry(.265,.265,.37,24),rim,x,.5,z);rr.rotation.z=Math.PI/2;const hub=addMesh(g,new THREE.CylinderGeometry(.1,.1,.39,16),glassDark,x,.5,z);hub.rotation.z=Math.PI/2}
+for(const x of [-.91,.91]){sphere(g,.23,.17,.07,redLamp,x,.84,1.98);sphere(g,.22,.16,.07,lamp,x,.89,-1.98);box(g,.3,.15,.12,p,x,1.25,-.61,.045);}
+// Chrome trim, aero spoiler, light housings, little plate and reflections.
+box(g,1.76,.065,.07,paint('#e6f9ff'),0,1.17,1.93,.03);
+box(g,.78,.28,.055,matte('#f9fbf6'),0,.73,2.012,.04);
+for(const x of [-.88,.88]){sphere(g,.30,.19,.075,paint('#ff5359'),x,.88,2.035);sphere(g,.16,.09,.08,paint('#ffd1d0'),x,.92,2.105);}
+for(const x of [-.73,.73]){box(g,.11,.50,.09,paint('#fff1df'),x,1.21,1.98,.04)}
+for(const x of [-.85,.85])box(g,.12,.30,.12,dark,x,1.44,1.87,.03);
+box(g,2.3,.13,.35,paint('#f6fff9'),0,1.69,1.87,.09);
+box(g,.22,.045,1.42,paint('#ffffff'),-.85,1.92,.15,.02);
+box(g,1.86,.18,.18,paint('#e9e6e3'),0,.49,1.92,.07);box(g,1.84,.15,.17,paint('#e9e6e3'),0,.48,-1.92,.06);
+// Sporty roof stripes and face on FRONT (-Z), never on rear-facing back window.
+if(face){for(const x of [-.34,.34]){box(g,.17,.025,.98,details,x,1.95,-.23,.02);sphere(g,.24,.29,.075,details,x,1.44,-1.225,20);sphere(g,.11,.16,.09,black,x+.04,1.42,-1.31,16);sphere(g,.036,.048,.025,cream,x+.075,1.49,-1.39,10)}
+const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(-.31,.86,-2.019),new THREE.Vector3(-.15,.76,-2.062),new THREE.Vector3(.15,.76,-2.062),new THREE.Vector3(.31,.86,-2.019)]);addMesh(g,new THREE.TubeGeometry(curve,16,.045,8,false),matte('#5c2c34'));for(const x of [-.62,.62])sphere(g,.19,.09,.052,paint('#ff8c83'),x,.95,-1.99)}
+return g}
+const laneX=[-5,0,5];
+let player,vehicles=[],active=false,paused=false,quizOpen=false,elapsed=0,score=0,lane=1,target=0,speed=1,spawnClock=1,last=performance.now(),lives=3,invulnerable=0,quizClock=0,quizIndex=-1,questionsAsked=0,safeTime=0,passedSinceBox=0,nextBoxAt=6,lastBoxAt=0,mystery=null,seenQuestions=new Set(),chosen='cute',musicOn=true,ctx=null,musicTimer=0,noteStep=0,noticeTimer=0;
+const questions=[{"q":"Apakah lima amalan 5S Sekolah Penyayang?","a":["Senyum, Salam, Sapa, Sopan dan Santun","Sindir, Serang, Sakat, Senyap dan Sorok","Senyum, Sukan, Sains, Seni dan Sajak","Sapa, Siar, Simpan, Sebar dan Sembunyi"],"c":0},{"q":"Apakah matlamat utama program SAFE?","a":["Menjadikan sekolah selamat, penyayang dan sifar buli","Menambahkan kerja rumah murid","Menggalakkan ejekan","Membiarkan buli tanpa tindakan"],"c":0},{"q":"Dalam SAFE, PRS membawa semangat...","a":["Kitakan Sahabat","Kita Lawan Rakan","Kita Rahsiakan Buli","Kita Ejek Sahabat"],"c":0},{"q":"Jika rakan dibuli, apakah tindakan paling baik?","a":["Beri sokongan dan lapor kepada guru","Ketawa bersama pembuli","Rakam untuk hiburan","Diam walaupun rakan dalam bahaya"],"c":0},{"q":"Apakah maksud sifat Peka dalam 6P?","a":["Sensitif terhadap emosi dan situasi rakan","Menyebar rahsia rakan","Memerhati untuk mengejek","Mengabaikan perasaan rakan"],"c":0},{"q":"Apakah tugas Pendengar dalam 6P?","a":["Sedia mendengar tanpa menghakimi","Memotong percakapan rakan","Menghina rakan yang sedih","Menyebarkan cerita peribadi"],"c":0},{"q":"Sifat Pelindung dalam 6P menekankan...","a":["Menjaga keselamatan rakan","Membantu pembuli","Membalas dendam","Mengasingkan mangsa"],"c":0},{"q":"Apakah yang patut dibuat apabila menyedari kes buli?","a":["Bertindak selamat, sokong mangsa dan laporkan","Berpura-pura tidak tahu","Menjadikan kisah itu bahan lawak","Membalas dengan keganasan"],"c":0},{"q":"Dalam modul PRS, apakah maksud Empati?","a":["Meletakkan diri dalam situasi rakan","Menilai rakan tanpa mendengar","Mengambil kesempatan atas masalah rakan","Memaksa rakan ikut kehendak kita"],"c":0},{"q":"Apakah amalan penting dalam Kerahsiaan dan Etika PRS?","a":["Menjaga privasi serta kepercayaan rakan","Membocorkan kisah rakan kepada ramai orang","Memuat naik cerita rakan tanpa izin","Menjadikan rahsia rakan bahan jenaka"],"c":0},{"q":"Apabila menerima aduan buli, PRS sepatutnya...","a":["Dengar, beri sokongan dan bantu mendapatkan bantuan guru","Janjikan semua perkara akan dirahsiakan walaupun berbahaya","Suruh mangsa balas dendam","Menyuruh mangsa berdiam diri"],"c":0},{"q":"Apakah cara menyelesaikan konflik yang baik?","a":["Berbincang dengan berhemah","Mengugut dan menjerit","Menyebarkan fitnah","Mengajak orang ramai bergaduh"],"c":0},{"q":"Apakah contoh amalan Santun?","a":["Menghormati perbezaan dan menjaga kebajikan rakan","Mengejek kelemahan orang","Menyindir setiap hari","Menyisihkan murid baharu"],"c":0},{"q":"Apakah contoh amalan Sapa?","a":["Bertanya khabar dan membina hubungan mesra","Mengelak semua rakan","Menengking rakan","Menyebarkan gosip"],"c":0},{"q":"Mengapakah amalan Senyum digalakkan?","a":["Mewujudkan suasana mesra dan positif","Menyakitkan hati rakan","Membenarkan perbuatan buli","Menggantikan tindakan membantu mangsa"],"c":0},{"q":"Apakah maksud sifat Prihatin dalam 6P?","a":["Membantu dengan ikhlas","Menolong hanya untuk ganjaran","Tidak peduli keadaan rakan","Menyalahkan mangsa"],"c":0},{"q":"Apakah maksud sifat Pembimbing dalam 6P?","a":["Membantu rakan ke arah kebaikan","Mengawal semua keputusan rakan","Menggalakkan rakan melanggar peraturan","Memalukan rakan"],"c":0},{"q":"Apakah matlamat kaunseling berfokus dalam SAFE?","a":["Memberi sokongan dan membantu pemulihan","Menambah hukuman tanpa bimbingan","Menyebar kisah murid","Mengaibkan murid di hadapan ramai"],"c":0},{"q":"Selepas rakan berkongsi masalah serius, tindakan PRS yang selamat ialah...","a":["Dapatkan bantuan guru kaunseling atau orang dewasa dipercayai","Rahsiakan walaupun ada bahaya","Sebarkan kepada kumpulan kelas","Suruh dia selesaikan sendiri"],"c":0},{"q":"Apakah yang dimaksudkan dengan sekolah sifar buli?","a":["Persekitaran yang mencegah dan menangani buli","Sekolah yang mengabaikan aduan","Sekolah tanpa peraturan","Sekolah yang membenarkan ejekan"],"c":0},{"q":"Apakah tiga langkah ringkas apabila melihat buli?","a":["Nampak, fikir dan bertindak dengan selamat","Rakam, tular dan ketawa","Lari, rahsiakan dan lupakan","Mengejek, mengugut dan mengejar"],"c":0},{"q":"Bagaimanakah kita boleh membantu rakan yang sedih akibat buli?","a":["Dengar tanpa menghakimi dan bantu cari sokongan","Salahkan dia","Paksa dia tersenyum dan diam","Jadikan ceritanya bahan hiburan"],"c":0},{"q":"Apakah contoh Pengurusan Emosi yang baik?","a":["Kawal diri ketika situasi tegang","Marah tanpa kawalan","Balas buli dengan buli","Memukul apabila tidak setuju"],"c":0},{"q":"Mengapakah lapor melalui saluran yang betul penting?","a":["Agar bantuan dan perlindungan dapat diberikan","Supaya semua orang boleh mengejek","Untuk membalas dendam","Supaya rahsia mangsa ditularkan"],"c":0},{"q":"Apakah sikap wajar terhadap murid yang sedang pulih daripada pengalaman buli?","a":["Sokong dengan hormat dan empati","Mengungkit peristiwa lama untuk mengejek","Mengasingkannya","Menyalahkannya"],"c":0},{"q":"Apakah maksud 5P dalam pelaksanaan SAFE?","a":["Pendidikan, Pencegahan, Pengukuhan Kesedaran, Pengamalan/Pembudayaan dan Pemulihan","Paksaan, Penghinaan, Pembalasan, Penyamaran dan Pengasingan","Peperiksaan, Percutian, Pertandingan, Perhimpunan dan Pendaftaran","Penghargaan markah sahaja"],"c":0},{"q":"Apakah sifat pertama dalam 6P PRS?","a":["Penyayang","Pemarah","Pendendam","Pemaksa"],"c":0},{"q":"Dalam 6P, apakah maksud Peka?","a":["Sensitif terhadap emosi dan keadaan rakan","Cepat menyebarkan cerita rakan","Sentiasa mengarah rakan","Tidak mahu mendengar"],"c":0},{"q":"Apakah tugas seorang Pendengar dalam 6P?","a":["Mendengar tanpa menghakimi","Mencelah dan memarahi rakan","Menyebarkan rahsia rakan","Mengabaikan aduan"],"c":0},{"q":"Apakah sifat Pelindung dalam 6P?","a":["Menjaga keselamatan rakan","Menggalakkan pergaduhan","Mengejek rakan yang takut","Menyorokkan maklumat bahaya"],"c":0},{"q":"Apakah tujuan amalan Salam?","a":["Mengukuhkan rasa hormat dan kemesraan","Menguji kekuatan fizikal","Memalukan murid baharu","Menjauhkan kawan"],"c":0},{"q":"Apakah contoh amalan Sopan?","a":["Menggunakan bahasa yang baik dan beradab","Menjerit kata kesat","Menyampuk untuk mengejek","Menyebarkan fitnah"],"c":0},{"q":"Apakah contoh amalan Santun?","a":["Membantu dan menghormati orang lain","Menghina kekurangan orang lain","Tidak peduli perasaan rakan","Memaksa orang ikut kehendak kita"],"c":0},{"q":"Jika berlaku perselisihan dengan rakan, apakah cara yang betul?","a":["Berbincang secara baik dan dapatkan bantuan jika perlu","Terus memukul","Mengajak rakan lain mengejek","Memuat naik video untuk memalukan"],"c":0},{"q":"Apakah maksud empati?","a":["Cuba memahami perasaan orang lain","Sentiasa menang dalam perdebatan","Tidak perlu mendengar rakan","Membalas ejekan dengan ejekan"],"c":0},{"q":"Mengapa PRS perlu menjaga kerahsiaan?","a":["Untuk melindungi privasi dan kepercayaan rakan","Supaya boleh menyimpan bahan gosip","Untuk menghalang bantuan kecemasan","Supaya semua masalah dibiarkan"],"c":0},{"q":"Jika keselamatan rakan terancam, apakah tindakan PRS?","a":["Segera rujuk guru atau orang dewasa yang dipercayai","Janji rahsiakan walau ada bahaya","Selesaikan sendirian tanpa bantuan","Tunggu sehingga ramai orang tahu"],"c":0},{"q":"Apakah tindakan awal apabila ternampak buli?","a":["Utamakan keselamatan dan laporkan kepada orang dewasa","Sertai pembuli","Ketawa dan rakam","Sebar video"],"c":0},{"q":"Apakah tujuan kempen Hentikan Buli dalam SAFE?","a":["Menyedarkan warga sekolah supaya mencegah buli","Mengadakan pertandingan mengejek","Menggalakkan pergaduhan","Membenarkan ugutan"],"c":0},{"q":"Mengapa sekolah memerlukan saluran aduan yang selamat?","a":["Supaya murid boleh mendapatkan bantuan tanpa takut","Supaya aduan dijadikan hiburan","Supaya tiada tindakan dibuat","Supaya pembuli boleh mengancam lagi"],"c":0},{"q":"Apakah contoh sokongan moral kepada rakan?","a":["Dengar, beri semangat dan bantu cari bantuan","Aibkan kisahnya","Suruh dia diam selamanya","Paksa dia membalas dendam"],"c":0},{"q":"Apakah peranan ibu bapa dalam usaha SAFE?","a":["Menyokong anak dan bekerjasama dengan sekolah","Mengabaikan aduan anak","Menyalahkan mangsa tanpa siasatan","Menyebarkan nama murid"],"c":0},{"q":"Apakah tujuan modul pengurusan emosi?","a":["Belajar mengawal diri ketika situasi tegang","Belajar memarahi rakan","Mengelak semua perasaan","Membalas dengan kekerasan"],"c":0},{"q":"Apakah tujuan modul penyelesaian konflik?","a":["Menyelesaikan pertikaian dengan berhemah","Menentukan siapa boleh mengugut","Menggalakkan pembalasan","Membuat rakan bermusuhan"],"c":0},{"q":"Apakah sasaran utama persekitaran sekolah dalam SAFE?","a":["Sekolah selamat, harmoni dan sifar buli","Sekolah yang membenarkan ejekan","Sekolah tanpa rasa hormat","Sekolah yang menolak aduan"],"c":0}];
+function makeF1(color){const g=new THREE.Group(),p=paint(color),white=paint('#fff8e8');box(g,1.38,.36,4.6,p,0,.58,0,.22);sphere(g,.68,.34,1.15,p,0,.83,-.8);box(g,.93,.16,2.15,p,0,.56,-1.85,.14);box(g,3.5,.13,.67,black,0,.42,-2.12,.07);box(g,3.55,.2,.65,p,0,.72,1.96,.08);for(const x of [-1.15,1.15])for(const z of [-1.26,1.38]){const wh=addMesh(g,new THREE.CylinderGeometry(.59,.59,.47,24),tire,x,.57,z);wh.rotation.z=Math.PI/2;const rr=addMesh(g,new THREE.CylinderGeometry(.27,.27,.48,16),rim,x,.57,z);rr.rotation.z=Math.PI/2}sphere(g,.35,.32,.43,glassDark,0,1.05,-.3);box(g,.13,.06,2.2,white,0,.78,-1.8,.03);for(const x of [-.84,.84]){box(g,.16,.18,.34,paint('#fff5df'),x,.73,1.9,.08);box(g,.18,.13,.35,redLamp,x,.73,-1.9,.05)}
+box(g,1.6,.16,.55,paint('#fffaf0'),0,.74,1.65,.08);
+for(const x of [-.48,.48])box(g,.11,.07,1.7,paint('#fff2e5'),x,.94,-.95,.03);
+return g}
+function makeSport(){const g=makeCar('#367de5',false);g.scale.set(1.12,.78,1.07);box(g,2.38,.14,.38,black,0,1.47,1.92,.06);box(g,2.1,.1,.4,paint('#dff7ff'),0,1.57,1.92,.06);return g}
+function selectPlayer(){if(player)scene.remove(player);player=chosen==='f1'?makeF1('#fb384d'):chosen==='sport'?makeSport():makeCar('#ff5438',true);player.position.set(0,.06,3.25);scene.add(player)}
+selectPlayer();
+const coneOrange=paint('#ff8b26'),coneWhite=matte('#fff9dd'),holeMat=matte('#141f2a');
+function makeCone(){const g=new THREE.Group();box(g,1.6,.16,1.6,matte('#363e47'),0,.10,0,.06);addMesh(g,new THREE.ConeGeometry(.57,1.35,12),coneOrange,0,.82,0);const ring=addMesh(g,new THREE.CylinderGeometry(.35,.41,.16,12),coneWhite,0,.88,0);return g}
+function makeHole(){const g=new THREE.Group();const rimHole=addMesh(g,new THREE.CylinderGeometry(1.2,1.22,.035,32),matte('#262b30'),0,.104,0);const interior=addMesh(g,new THREE.CylinderGeometry(.93,.93,.035,32),holeMat,0,.126,0);for(let k=0;k<7;k++){const a=k*Math.PI*2/7;box(g,.36,.055,.15,matte('#8995a0'),Math.cos(a)*1.07,.13,Math.sin(a)*1.07,.03)}return g}
+function makeMystery(){
+ const g=new THREE.Group(),gold=paint('#ffcf38'),edge=paint('#fff4a3'),violet=paint('#9c48e5');
+ const cube=addMesh(g,new RoundedBoxGeometry(2.25,2.25,2.25,5,.34),gold,0,1.65,0);
+ for(const x of [-1.1,1.1])box(g,.12,1.85,.12,edge,x,1.65,0,.03);
+ for(const z of [-1.1,1.1])box(g,.13,1.87,.12,edge,0,1.65,z,.03);
+ const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;
+ const c=canvas.getContext('2d');c.clearRect(0,0,256,256);c.fillStyle='#7839ab';c.font='1000 195px system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText('?',128,139);
+ const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
+ for(const z of [-1.151,1.151]){const plate=addMesh(g,new THREE.PlaneGeometry(1.6,1.6),new THREE.MeshBasicMaterial({map:texture,transparent:true,side:THREE.DoubleSide}),0,1.65,z);if(z<0)plate.rotation.y=Math.PI;}
+ for(const x of [-1.151,1.151]){const plate=addMesh(g,new THREE.PlaneGeometry(1.6,1.6),new THREE.MeshBasicMaterial({map:texture,transparent:true,side:THREE.DoubleSide}),x,1.65,0);plate.rotation.y=Math.PI/2;}
+ const glow=addMesh(g,new THREE.TorusGeometry(1.65,.065,10,48),violet,0,1.62,0);glow.rotation.x=Math.PI/2;
+ g.userData={type:'mystery',lane:1,hit:false};return g;
+}
+function spawnMystery(){
+ // Kotak muncul bersama trafik sedia ada, tanpa membuang kereta/halangan.
+ // Pilih lorong yang bebas berhampiran titik kemunculan supaya kotak tidak bertindih.
+ const nearby=vehicles.filter(v=>v.position.z < -72 && v.position.z > -110);
+ const free=[0,1,2].filter(i=>!nearby.some(v=>v.userData.lane===i));
+ if(!free.length)return false;
+ const which=free[Math.floor(Math.random()*free.length)];mystery=makeMystery();mystery.position.set(laneX[which],0,-95);mystery.userData.lane=which;
+ scene.add(mystery);vehicles.push(mystery);lastBoxAt=elapsed;passedSinceBox=0;
+ showNotice('🎁 KOTAK MISTERI! Elak trafik dan kutip kotak SAFE',3.2);
+ return true;
+}
+function showNotice(message,t=1.9){$('notice').textContent=message;$('notice').hidden=false;noticeTimer=t}
+function audioInit(){if(!musicOn)return;try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume()}catch(e){musicOn=false;$('music').textContent='♫ MUZIK OFF'}}
+function tone(freq,duration=.14,type='triangle',vol=.035){if(!ctx||ctx.state!=='running'||!musicOn)return;const o=ctx.createOscillator(),gain=ctx.createGain();o.type=type;o.frequency.setValueAtTime(freq,ctx.currentTime);gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(vol,ctx.currentTime+.013);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+duration);o.connect(gain).connect(ctx.destination);o.start();o.stop(ctx.currentTime+duration+.02)}
+const melody=[392,494,587,784,587,494,440,523,659,880,659,523,349,440,523,698,523,440,392,494,587,784,698,587];
+function updateMusic(dt){if(!musicOn||!ctx||ctx.state!=='running'||!active||paused||quizOpen)return;musicTimer-=dt;if(musicTimer<=0){tone(melody[noteStep%melody.length],.18,'triangle',.027);if(noteStep%4===0)tone([196,220,174,196][Math.floor(noteStep/4)%4],.26,'sine',.026);noteStep++;musicTimer=.22}}
+function start(){const entered=cleanName($('playerName').value);if(entered.length<2){$('nameStatus').textContent='Masukkan nama sekurang-kurangnya 2 aksara dahulu.';$('playerName').focus();return}playerName=entered;$('playerName').value=entered;$('nameStatus').textContent='';gameSerial++;finalRunId=null;submitPromise=null;for(const v of vehicles)scene.remove(v);vehicles=[];score=0;elapsed=0;lane=1;target=0;speed=1;spawnClock=1.0;lives=3;invulnerable=0;quizOpen=false;quizClock=0;questionsAsked=0;passedSinceBox=0;nextBoxAt=3+Math.floor(Math.random()*3);lastBoxAt=0;mystery=null;seenQuestions.clear();safeTime=2;noteStep=0;musicTimer=0;selectPlayer();$('lives').textContent='❤️'.repeat(3);$('score').textContent='0';$('speed').textContent='1.0×';$('intro').hidden=true;$('end').hidden=true;$('paused').hidden=true;$('quiz').hidden=true;$('qContinue').hidden=true;active=true;paused=false;audioInit();showNotice('🚦 Tahap awal lebih mudah • 3 nyawa',2.4);last=performance.now()}
+function move(dir){if(!active||paused||quizOpen)return;lane=Math.max(0,Math.min(2,lane+dir));target=laneX[lane]}
+function spawn(){
+ if(safeTime>0||quizOpen)return;
+ const spawnZ=-95;
+ // Pastikan lorong masih boleh dilalui: jarak pemeriksaan lebih besar untuk trafik padat.
+ const nearby=vehicles.filter(v=>Math.abs(v.position.z-spawnZ)<38);
+ const occupied=new Set(nearby.map(v=>v.userData.lane));
+ const options=[0,1,2].filter(i=>!occupied.has(i));
+ if(options.length===0)return;
+ // Kotak misteri berkongsi trafik tanpa menghalang semua lorong.
+ if(mystery&&Math.abs(mystery.position.z-spawnZ)<24&&options.length===1)return;
+ const idx=options[Math.floor(Math.random()*options.length)];
+ const r=Math.random(),stage=Math.min(1,elapsed/110),type=r<(0.86-.18*stage)?'car':r<(0.94-.05*stage)?'cone':'hole';
+ const colors=['#ffce48','#47c2d3','#9972e8','#60d67d','#ff8d75','#f7a4c3'];
+ const v=type==='car'?makeCar(colors[Math.floor(Math.random()*colors.length)],false):type==='cone'?makeCone():makeHole();
+ v.position.set(laneX[idx],type==='car'?.06:0,spawnZ);
+ v.userData={lane:idx,type,hit:false};scene.add(v);vehicles.push(v);
+}
+
+function clearRoad(){for(const v of vehicles)scene.remove(v);vehicles=[];mystery=null;spawnClock=.4;safeTime=2}
+function askQuestion(){quizOpen=true;clearRoad();let id;if(seenQuestions.size>=questions.length)seenQuestions.clear();do{id=Math.floor(Math.random()*questions.length)}while(seenQuestions.has(id));seenQuestions.add(id);quizIndex=id;const source=questions[id];const order=[0,1,2,3].sort(()=>Math.random()-.5);const q={q:source.q,a:order.map(j=>source.a[j]),c:order.indexOf(source.c)};$('qText').textContent=q.q;$('feedback').textContent='';$('qContinue').hidden=true;const area=$('answers');area.replaceChildren();q.a.forEach((text,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+i)+'. '+text;b.onclick=()=>{if(area.dataset.done==='1')return;area.dataset.done='1';const correct=i===q.c;b.classList.add(correct?'correct':'wrong');for(const btn of area.children)btn.disabled=true;if(!correct)area.children[q.c].classList.add('correct');if(correct){score+=25;$('score').textContent=score;tone(880,.24,'sine',.07)}$('feedback').textContent=correct?'✅ Tepat! Bonus +25 markah.':'💡 Jawapan yang betul ditandakan hijau.';$('qContinue').hidden=false};area.appendChild(b)});area.dataset.done='0';$('quiz').hidden=false;questionsAsked++}
+function resumeQuiz(){quizOpen=false;$('quiz').hidden=true;clearRoad();passedSinceBox=0;nextBoxAt=3+Math.floor(Math.random()*3);lastBoxAt=elapsed;showNotice('🛡️ 2 SAAT JALAN SELAMAT — bersedia!',1.9);last=performance.now()}
+function damage(obstacle){
+ // Pelanggaran pertama serta-merta menolak TEPAT satu nyawa.
+ if(invulnerable>0||!active)return;
+ lives=Math.max(0,lives-1);
+ $('lives').textContent='❤️'.repeat(lives)+'🖤'.repeat(3-lives);
+ tone(164,.36,'sawtooth',.055);
+ // Buang objek yang baru dilanggar supaya tidak boleh terkena dua kali.
+ if(obstacle){obstacle.userData.hit=true;obstacle.visible=false;scene.remove(obstacle)}
+ if(lives===0){finish();return}
+ // Perlindungan singkat hanya untuk mengelak nyawa berganda akibat sentuhan sama.
+ invulnerable=.85;
+ showNotice('💥 TERLANGGAR! -1 NYAWA • Baki '+lives,1.15);
+ // Bersihkan halangan berdekatan sewaktu kemalangan, tanpa memadam trafik jauh.
+ for(const v of vehicles){if(v.userData.type!=='mystery'&&Math.abs(v.position.z-player.position.z)<7){v.userData.hit=true;v.visible=false;scene.remove(v)}}
+
+}
+function finish(){active=false;quizOpen=false;$('quiz').hidden=true;$('final').textContent=score;$('end').hidden=false;const serial=gameSerial;submitPromise=submitScore(score,serial)}
+function goHome(){closeRankings();active=false;paused=false;quizOpen=false;for(const v of vehicles)scene.remove(v);vehicles=[];mystery=null;$('quiz').hidden=true;$('paused').hidden=true;$('end').hidden=true;$('intro').hidden=false;$('notice').hidden=true;selectPlayer();last=performance.now()}
+function togglePause(){if(!active||quizOpen)return;paused=!paused;$('paused').hidden=!paused;last=performance.now()}
+function update(now){requestAnimationFrame(update);const dt=Math.min(Math.max((now-last)/1000,0),.045);last=now;if(noticeTimer>0){noticeTimer-=dt;if(noticeTimer<=0)$('notice').hidden=true}updateMusic(dt);if(active&&!paused&&!quizOpen){elapsed+=dt;safeTime=Math.max(0,safeTime-dt);invulnerable=Math.max(0,invulnerable-dt);speed=Math.min(3.3,1+elapsed*.018+score/2100);$('speed').textContent=speed.toFixed(1)+'×';const dist=dt*31*speed;for(const v of vehicles){if(v.userData.type==='mystery'){v.rotation.y+=dt*1.25;v.position.y=.12+Math.sin(elapsed*3)*.14}}for(const m of moving){m.obj.position.z+=dist*m.speed;if(m.obj.position.z>18)m.obj.position.z-=m.loop}const prev=player.position.x;player.position.x+=(target-prev)*Math.min(1,dt*12);player.rotation.z+=(Math.max(-.15,Math.min(.15,(target-prev)*-.055))-player.rotation.z)*Math.min(1,dt*8);player.rotation.y+=(Math.max(-.085,Math.min(.085,(target-prev)*-.03))-player.rotation.y)*Math.min(1,dt*8);player.position.y=.06+Math.sin(elapsed*13)*.014;player.visible=invulnerable<=0||Math.floor(invulnerable*9)%2===0;spawnClock-=dt;if(spawnClock<=0){if(!mystery&&safeTime<=0&&passedSinceBox>=nextBoxAt&&elapsed-lastBoxAt>=11&&spawnMystery()){spawnClock=.34}else{spawn();spawnClock=Math.max(.37,1.08-elapsed*.006-(speed-1)*.09)}}for(let i=vehicles.length-1;i>=0;i--){const v=vehicles[i];if(v.userData.hit){vehicles.splice(i,1);continue}const prevZ=v.position.z;v.position.z+=dist*.89;const dx=Math.abs(v.position.x-player.position.x),dz=Math.abs(v.position.z-player.position.z);const hitX=v.userData.type==='mystery'?1.9:v.userData.type==='car'?2.23:v.userData.type==='cone'?1.4:1.38;
+ const hitZ=v.userData.type==='mystery'?2.3:v.userData.type==='car'?4.0:v.userData.type==='cone'?2.1:2.3;
+ // Semak lintasan antara dua frame agar objek laju tidak terlepas daripada pengesanan.
+ const crossed=(prevZ<=player.position.z+hitZ&&v.position.z>=player.position.z-hitZ);
+ if(dx<hitX&&(dz<hitZ||crossed)){
+  if(v.userData.type==='mystery'){tone(659,.22,'sine',.05);askQuestion();break}
+  damage(v);
+  if(!active)break;
+  // Selepas satu nyawa ditolak, jangan proses objek sama lagi dalam frame ini.
+  continue;
+ }if(v.position.z>13){scene.remove(v);vehicles.splice(i,1);if(v.userData.type==='mystery'){mystery=null;passedSinceBox=0;nextBoxAt=3+Math.floor(Math.random()*3);lastBoxAt=elapsed;safeTime=1;showNotice('🎁 Kotak terlepas! Cuba lagi nanti.',2)}else{score+=10;passedSinceBox++;$('score').textContent=score}}}}camera.position.x+=(player.position.x*.16-camera.position.x)*Math.min(1,dt*4);renderer.render(scene,camera)}
+function resize(){
+ const w=Math.max(1,document.documentElement.clientWidth||innerWidth);
+ const h=Math.max(1,window.visualViewport?.height||innerHeight);
+ const p=h>w;
+ camera.aspect=w/h;
+ // Wider portrait FOV leaves room for all 3 lanes and makes the car easier to see.
+ camera.fov=p?(w<450?74:67):(h<480?61:55);
+ camera.position.set(camera.position.x,p?(w<450?10.5:9.3):(h<480?9.4:8.4),p?(w<450?19:17):(h<480?18:15.8));
+ camera.lookAt(0,.86,p?-7.5:-7);
+ camera.updateProjectionMatrix();
+ renderer.setSize(w,h,false);
+ renderer.domElement.style.width=w+'px';renderer.domElement.style.height=h+'px';
+}
+resize();addEventListener('resize',resize);addEventListener('orientationchange',()=>requestAnimationFrame(resize));
+if(window.visualViewport)window.visualViewport.addEventListener('resize',resize);
+requestAnimationFrame(update);
+for(const b of document.querySelectorAll('[data-car]'))b.onclick=()=>{chosen=b.dataset.car;document.querySelectorAll('[data-car]').forEach(el=>el.classList.toggle('selected',el===b));selectPlayer()};
+for(const id of ['homeTop','pauseHome','endHome','quizHome'])$(id).onclick=goHome;$('startBtn').onclick=start;$('again').onclick=()=>{$('end').hidden=true;$('intro').hidden=false};$('pause').onclick=togglePause;$('resume').onclick=togglePause;$('qContinue').onclick=resumeQuiz;
+$('music').onclick=()=>{musicOn=!musicOn;$('music').textContent=musicOn?'♫ MUZIK ON':'♫ MUZIK OFF';if(musicOn)audioInit()};
+for(const [id,dir] of [['left',-1],['right',1]])$(id).addEventListener('pointerdown',e=>{e.preventDefault();move(dir)});
+addEventListener('keydown',e=>{if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName||''))return;if(['ArrowLeft','ArrowRight','a','d','A','D',' ','Escape'].includes(e.key)&&active)e.preventDefault();if(e.repeat)return;if(['ArrowLeft','a','A'].includes(e.key))move(-1);if(['ArrowRight','d','D'].includes(e.key))move(1);if(e.key===' '||e.key==='Escape')togglePause()});
+let swipe=null;renderer.domElement.addEventListener('pointerdown',e=>swipe=e.clientX);renderer.domElement.addEventListener('pointerup',e=>{if(swipe===null)return;const dx=e.clientX-swipe;if(Math.abs(dx)>25)move(dx>0?1:-1);swipe=null});document.addEventListener('visibilitychange',()=>{if(document.hidden&&active&&!paused&&!quizOpen)togglePause()});
+} catch(err){console.error(err);document.getElementById('error').classList.add('show');document.getElementById('startBtn').disabled=true;}
+</script>
+</body>
+</html>
